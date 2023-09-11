@@ -1,7 +1,15 @@
 const std = @import("std");
 
-pub fn getValue(allocator: *std.mem.Allocator, key: []const u8) !?[]const u8 {
-    _ = allocator;
+/// The getValue function is returning the value of the provided key.
+/// The `.env` file should be located at the root folder.
+export fn getValue(key: []const u8) !?[]const u8 {
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+
+    defer if (gpa.deinit() != .ok) {
+        std.log.err("oh no, we've got a leak", .{});
+    } else {
+        std.log.debug("memory managed correctly", .{});
+    };
     const file = try std.fs.cwd().openFile(".env", .{});
     defer file.close();
 
@@ -13,6 +21,7 @@ pub fn getValue(allocator: *std.mem.Allocator, key: []const u8) !?[]const u8 {
         const env_key = key_value.next() orelse "";
         const value = key_value.next() orelse "";
         if (std.mem.eql(u8, env_key, key)) {
+            std.debug.print("Value of of {s} is: {s}\n", .{ key, value });
             return value;
         }
     }
