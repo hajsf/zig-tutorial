@@ -5,7 +5,7 @@ const lib = @import("./lib/env.zig");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    const allocator = std.heap.page_allocator;
+    const allocator = gpa.allocator();
     _ = allocator;
     defer if (gpa.deinit() != .ok) {
         std.log.err("oh no, we've got a leak", .{});

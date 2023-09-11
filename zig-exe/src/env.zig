@@ -16,6 +16,7 @@ pub fn main() !void {
     var buf: [1024]u8 = undefined;
     var stream = file.reader();
 
+    // Deliminatr 10 is the ASCII of \n
     while (try stream.readUntilDelimiterOrEof(&buf, 10)) |line| {
         var key_value = std.mem.split(u8, line, "=");
         const key = key_value.next() orelse "";
