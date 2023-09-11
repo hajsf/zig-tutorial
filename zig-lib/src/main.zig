@@ -1,10 +1,20 @@
 const std = @import("std");
-const testing = std.testing;
 
-export fn add(a: i32, b: i32) i32 {
-    return a + b;
-}
+pub fn getValue(allocator: *std.mem.Allocator, key: []const u8) !?[]const u8 {
+    _ = allocator;
+    const file = try std.fs.cwd().openFile(".env", .{});
+    defer file.close();
 
-test "basic add functionality" {
-    try testing.expect(add(3, 7) == 10);
+    var buf: [1024]u8 = undefined;
+    var stream = file.reader();
+
+    while (try stream.readUntilDelimiterOrEof(&buf, 10)) |line| {
+        var key_value = std.mem.split(line, "=");
+        const env_key = key_value.next() orelse "";
+        const value = key_value.next() orelse "";
+        if (std.mem.eql(u8, env_key, key)) {
+            return value;
+        }
+    }
+    return null;
 }
