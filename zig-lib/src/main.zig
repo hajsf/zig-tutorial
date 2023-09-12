@@ -2,7 +2,7 @@ const std = @import("std");
 
 /// The getValue function is returning the value of the provided key.
 /// The `.env` file should be located at the root folder.
-export fn getValue(key: []const u8) !?[]const u8 {
+pub fn getValue(key: []const u8) !?[]const u8 {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 
     defer if (gpa.deinit() != .ok) {
@@ -26,4 +26,9 @@ export fn getValue(key: []const u8) !?[]const u8 {
         }
     }
     return null;
+}
+
+/// Sum 2 integers together
+export fn add(a: i32, b: i32) i32 {
+    return a + b;
 }
