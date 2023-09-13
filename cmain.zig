@@ -25,4 +25,4 @@ pub fn main() !void {
 }
 
 // zig build-lib -dynamic clib.zig
-// zig run -I . cmain.zig
+// zig run -I . -L. main.zig -lc -lclib.so
